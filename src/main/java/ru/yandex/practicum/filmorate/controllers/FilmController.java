@@ -1,39 +1,38 @@
 package ru.yandex.practicum.filmorate.controllers;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
-
-import java.util.HashMap;
+import ru.yandex.practicum.filmorate.repository.FilmRepository;
 
 @RestController
 @Slf4j
 @RequestMapping("/films")
+@Validated
 
 public class FilmController {
-    private final HashMap<Long, Film> filmRepository = new HashMap<>();
+    FilmRepository filmRepository = new FilmRepository();
 
 
     @GetMapping
-    public HashMap<Long, Film> getFilms() {
+    public Object[] getFilms() {
         log.debug("поулчен запрос GET /films");
-        return filmRepository;
+        return filmRepository.getFilmRepository().values().toArray();
     }
 
-    @PostMapping
-    public Film create(@RequestBody @Valid Film film) {
-        log.debug("поулчен запрос POST /film");
-        filmRepository.put(film.getId(), film);
+    @PostMapping()
+    Film create(@RequestBody @Valid Film film) {
+        log.info("поулчен запрос POST /films");
+        filmRepository.save(film);
         return film;
     }
 
     @PutMapping
-    public Film update(@RequestBody @Valid Film film) {
-        log.debug("поулчен запрос PUT /film");
-        filmRepository.put(film.getId(), film);
+    Film update(@RequestBody @Valid Film film) {
+        log.debug("поулчен запрос PUT /films");
+        filmRepository.update(film);
         return film;
     }
 }

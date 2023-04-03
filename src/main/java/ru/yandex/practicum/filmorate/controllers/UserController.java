@@ -2,37 +2,37 @@ package ru.yandex.practicum.filmorate.controllers;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-
-import java.util.HashMap;
+import ru.yandex.practicum.filmorate.repository.UserRepository;
 
 @RestController
 @Slf4j
 @RequestMapping("/users")
+@Validated
 
 public class UserController {
-    private final HashMap<Long, User> userRepository = new HashMap<>();
+    UserRepository userRepository = new UserRepository();
 
 
     @GetMapping
-    public HashMap<Long, User> getFilms() {
+    public Object[] getUsers() {
         log.debug("поулчен запрос GET /users");
-        return userRepository;
+        return userRepository.getUserRepository().values().toArray();
     }
 
-    @PostMapping
-    public User create(@RequestBody @Valid User user) {
-        log.debug("поулчен запрос POST /user");
-        userRepository.put(user.getId(), user);
+    @PostMapping()
+    User create(@RequestBody @Valid User user) {
+        log.info("поулчен запрос POST /users");
+        userRepository.save(user);
         return user;
     }
 
     @PutMapping
     public User update(@RequestBody @Valid User user) {
-        log.debug("поулчен запрос PUT /user");
-        userRepository.put(user.getId(), user);
+        log.debug("поулчен запрос PUT /users");
+        userRepository.update(user);
         return user;
     }
 }

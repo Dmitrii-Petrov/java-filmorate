@@ -1,16 +1,15 @@
 package ru.yandex.practicum.filmorate.model;
 
+
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
-import java.time.Duration;
 import java.time.LocalDate;
 
 
 @Data
 public class Film {
-    @NotNull
-    @Min(0)
+
     private long id;
     @NotBlank
     private String name;
@@ -22,5 +21,6 @@ public class Film {
     private LocalDate releaseDate;
 
     @NotNull
+    @Min(0)
     private int duration;
 }
