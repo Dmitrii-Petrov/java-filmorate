@@ -1,14 +1,12 @@
 package ru.yandex.practicum.filmorate.repository;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.servise.ValidateService;
 
 import java.util.HashMap;
 
 @Data
-@Component
 public class FilmRepository {
     HashMap<Long, Film> filmRepository = new HashMap<>();
     ValidateService validateService = new ValidateService();

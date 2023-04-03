@@ -1,17 +1,17 @@
 package ru.yandex.practicum.filmorate.controllers;
 
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.repository.UserRepository;
 
+import javax.validation.Valid;
+
 @RestController
 @Slf4j
 @RequestMapping("/users")
 @Validated
-
 public class UserController {
     UserRepository userRepository = new UserRepository();
 
