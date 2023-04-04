@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.repository;
 import lombok.Data;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.validation.ValidationException;
 import java.util.HashMap;
 
 @Data
@@ -21,7 +22,7 @@ public class UserRepository {
 
     public void update(User user) {
         if (!userRepository.containsKey(user.getId())) {
-            throw new RuntimeException("юзер не существует");
+            throw new ValidationException("юзер не существует");
         }
         userRepository.put(user.getId(), user);
     }
