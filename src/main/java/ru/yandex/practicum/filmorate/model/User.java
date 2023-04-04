@@ -17,7 +17,7 @@ public class User {
     @NotBlank
     @Pattern(regexp = "^[a-zA-Z0-9]{3,20}$")
     String login;
-    @Max(20)
+    @Size(max = 20, message = "максимальная длина имени - 20 символов")
     String name;
     @Past
     LocalDate birthday;
