@@ -2,12 +2,11 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exeptions.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.NoSuchElementException;
 
 @Data
 @Component
@@ -28,7 +27,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public void update(Film film) {
         if (!filmRepository.containsKey(film.getId())) {
-            throw new NoSuchElementException("фильм не существует");
+            throw new FilmNotFoundException();
         }
         filmRepository.put(film.getId(), film);
     }
@@ -36,7 +35,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public void delete(Long id) {
         if (!filmRepository.containsKey(id)) {
-            throw new NoSuchElementException("фильм не существует");
+            throw new FilmNotFoundException();
         }
         filmRepository.remove(id);
     }
@@ -45,7 +44,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film getFilm(Long id) {
         if (!filmRepository.containsKey(id)) {
-            throw new ValidationException("фильма не существует");
+            throw new FilmNotFoundException();
         }
         return filmRepository.get(id);
     }

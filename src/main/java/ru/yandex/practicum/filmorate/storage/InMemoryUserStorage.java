@@ -2,9 +2,9 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exeptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -28,7 +28,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public void update(User user) {
         if (!userRepository.containsKey(user.getId())) {
-            throw new ValidationException("юзер не существует");
+            throw new UserNotFoundException();
         }
         userRepository.put(user.getId(), user);
     }
@@ -36,7 +36,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public void delete(Long id) {
         if (!userRepository.containsKey(id)) {
-            throw new ValidationException("юзер не существует");
+            throw new UserNotFoundException();
         }
         userRepository.remove(id);
 
@@ -45,14 +45,14 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User getUser(Long id) {
         if (!userRepository.containsKey(id)) {
-            throw new ValidationException("юзер не существует");
+            throw new UserNotFoundException();
         }
         return userRepository.get(id);
     }
 
     @Override
-    public Object[] getUsers() {
-        return userRepository.values().toArray();
+    public ArrayList<User> getUsers() {
+        return new ArrayList<>(userRepository.values());
     }
 
     @Override

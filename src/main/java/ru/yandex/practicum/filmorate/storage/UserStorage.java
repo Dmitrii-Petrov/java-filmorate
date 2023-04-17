@@ -15,7 +15,7 @@ public interface UserStorage {
 
     User getUser(Long id);
 
-    Object[] getUsers();
+    ArrayList<User> getUsers();
 
     ArrayList<User> getUserList(Set<Long> userIdList);
 

@@ -5,14 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exeptions.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exeptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -71,15 +72,20 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public ArrayList<Film> getPopularFilms(@RequestParam(required = false) Long count) {
+    public List<Film> getPopularFilms(@RequestParam(required = false) Integer count) {
         log.debug("поулчен запрос get /films/{id}/like/{userId}");
         return filmService.getMostLikedFilms(filmStorage, count);
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleFilmNotFound(final ValidationException e) {
-        return Map.of("error", "Такого фильма нет");
+    public ErrorResponse handle(final FilmNotFoundException e) {
+        return new ErrorResponse("Ошибка данных", e.getMessage());
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handle(final UserNotFoundException e) {
+        return new ErrorResponse("Ошибка данных", e.getMessage());
+    }
 }

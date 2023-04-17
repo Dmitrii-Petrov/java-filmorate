@@ -5,14 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exeptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import java.util.ArrayList;
-import java.util.Map;
 
 @RestController
 @Slf4j
@@ -30,7 +29,7 @@ public class UserController {
 
 
     @GetMapping
-    public Object[] getUsers() {
+    public ArrayList<User> getUsers() {
         log.debug("поулчен запрос GET /users");
         return userStorage.getUsers();
     }
@@ -84,8 +83,9 @@ public class UserController {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleUserNotFound(final ValidationException e) {
-        return Map.of("error", "Такого юзера нет");
+    public ErrorResponse handle(final UserNotFoundException e) {
+        return new ErrorResponse("Ошибка данных", e.getMessage());
     }
+
 
 }
