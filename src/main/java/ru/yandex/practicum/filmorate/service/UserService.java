@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,14 +24,42 @@ public class UserService {
         return userStorage;
     }
 
-    public void addFriend(User user1, User user2) {
-        user1.getFriends().add(user2.getId());
-        user2.getFriends().add(user1.getId());
+    public ArrayList<User> getUsers() {
+        return getUserStorage().getUsers();
     }
 
-    public void removeFriend(User user1, User user2) {
-        user1.getFriends().remove(user2.getId());
-        user2.getFriends().remove(user1.getId());
+    public User getUsersById(Long userId) {
+        return getUserStorage().getUser(userId);
+    }
+
+    public ArrayList<User> getUsersFriends(Long userId) {
+        return getUserStorage().getUserList(getUserStorage().getUser(userId).getFriends());
+    }
+
+    public ArrayList<User> getUsersCommonFriends(Long userId, Long otherId) {
+        return getUserStorage().getUserList(commonFriends(getUserStorage().getUser(userId), getUserStorage().getUser(otherId)));
+    }
+
+    public User create(User user) {
+        getUserStorage().save(user);
+        return user;
+    }
+
+    public User update(User user) {
+        getUserStorage().update(user);
+        return user;
+    }
+
+    public User addFriend(Long userId1, Long userId2) {
+        getUsersById(userId1).getFriends().add(getUsersById(userId2).getId());
+        getUsersById(userId2).getFriends().add(getUsersById(userId1).getId());
+        return getUsersById(userId1);
+    }
+
+    public User removeFriend(Long userId1, Long userId2) {
+        getUsersById(userId1).getFriends().remove(getUsersById(userId2).getId());
+        getUsersById(userId2).getFriends().remove(getUsersById(userId1).getId());
+        return getUsersById(userId1);
     }
 
     public Set<Long> commonFriends(User user1, User user2) {

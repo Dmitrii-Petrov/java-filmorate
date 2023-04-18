@@ -26,53 +26,49 @@ public class UserController {
     @GetMapping
     public ArrayList<User> getUsers() {
         log.debug("поулчен запрос GET /users");
-        return userService.getUserStorage().getUsers();
+        return userService.getUsers();
     }
 
     @GetMapping("/{userId}")
     public User getUsersById(@PathVariable(required = false) Long userId) {
         log.debug("поулчен запрос GET /users/id");
-        return userService.getUserStorage().getUser(userId);
+        return userService.getUsersById(userId);
 
     }
 
     @GetMapping("/{userId}/friends")
     public ArrayList<User> getUsersFriends(@PathVariable Long userId) {
         log.debug("поулчен запрос GET /users/id/friends");
-        return userService.getUserStorage().getUserList(userService.getUserStorage().getUser(userId).getFriends());
+        return userService.getUsersFriends(userId);
     }
 
     @GetMapping("/{userId}/friends/common/{otherId}")
     public ArrayList<User> getUsersCommonFriends(@PathVariable Long userId, @PathVariable Long otherId) {
         log.debug("поулчен запрос GET /users/id/friends/common/otherId");
-        return userService.getUserStorage().getUserList(userService.commonFriends(userService.getUserStorage().getUser(userId), userService.getUserStorage().getUser(otherId)));
+        return userService.getUsersCommonFriends(userId, otherId);
     }
 
     @PostMapping()
-    User create(@RequestBody @Valid User user) {
+    public User create(@RequestBody @Valid User user) {
         log.info("поулчен запрос POST /users");
-        userService.getUserStorage().save(user);
-        return user;
+        return userService.create(user);
     }
 
     @PutMapping
     public User update(@RequestBody @Valid User user) {
         log.debug("поулчен запрос PUT /users");
-        userService.getUserStorage().update(user);
-        return user;
+        return userService.update(user);
     }
 
     @PutMapping("/{id}/friends/{friendId}")
     public User addFriend(@PathVariable Long id, @PathVariable Long friendId) {
         log.debug("поулчен запрос PUT /users/id/friends/friendId");
-        userService.addFriend(userService.getUserStorage().getUser(id), userService.getUserStorage().getUser(friendId));
-        return userService.getUserStorage().getUser(id);
+        return userService.addFriend(id, friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
     public User deleteFriend(@PathVariable Long id, @PathVariable Long friendId) {
         log.debug("поулчен запрос DELETE /users/id/friends/friendId");
-        userService.removeFriend(userService.getUserStorage().getUser(id), userService.getUserStorage().getUser(friendId));
-        return userService.getUserStorage().getUser(id);
+        return userService.removeFriend(id, friendId);
     }
 }

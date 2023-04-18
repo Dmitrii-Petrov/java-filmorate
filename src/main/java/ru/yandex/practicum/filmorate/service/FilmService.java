@@ -24,18 +24,40 @@ public class FilmService {
         return filmStorage;
     }
 
-    public void addLike(Film film, Long id) {
-        film.getLikes().add(id);
+    public ArrayList<Film> getFilms() {
+        return getFilmStorage().getFilms();
     }
 
-    public void removeLike(Film film, Long id) {
-        if (!film.getLikes().contains(id)) {
+    public Film getFilmById(Long filmId) {
+        return getFilmStorage().getFilm(filmId);
+
+    }
+
+    public Film create(Film film) {
+        getFilmStorage().save(film);
+        return film;
+    }
+
+    public Film update(Film film) {
+        getFilmStorage().update(film);
+        return film;
+    }
+
+
+    public Film addLike(Long filmId, Long id) {
+        getFilmById(filmId).getLikes().add(id);
+        return getFilmById(filmId);
+    }
+
+    public Film removeLike(Long filmId, Long id) {
+        if (!getFilmById(filmId).getLikes().contains(id)) {
             throw new UserNotFoundException();
         }
-        film.getLikes().remove(id);
+        getFilmById(filmId).getLikes().remove(id);
+        return getFilmById(filmId);
     }
 
-    public List<Film> getMostLikedFilms(FilmStorage filmStorage, Integer size) {
+    public List<Film> getMostLikedFilms(Integer size) {
         ArrayList<Film> list = filmStorage.getFilms();
         list.sort((lhs, rhs) -> rhs.getLikes().size() - lhs.getLikes().size());
         return list.subList(0, Integer.min(list.size(), Objects.requireNonNullElse(size, 10)));
