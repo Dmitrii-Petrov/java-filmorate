@@ -2,11 +2,8 @@ package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exeptions.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exeptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
@@ -20,72 +17,60 @@ import java.util.List;
 @RequestMapping("/films")
 @Validated
 public class FilmController {
-    FilmStorage filmStorage;
     FilmService filmService;
 
     @Autowired
-    public FilmController(FilmStorage filmStorage, FilmService filmService) {
+    public FilmController(FilmService filmService) {
         this.filmService = filmService;
-        this.filmStorage = filmStorage;
     }
 
 
     @GetMapping
     public ArrayList<Film> getFilms() {
         log.debug("поулчен запрос GET /films");
-        return filmStorage.getFilms();
+        return filmService.getFilmStorage().getFilms();
     }
 
     @GetMapping("/{filmId}")
     public Film getFilmById(@PathVariable(required = false) Long filmId) {
         log.debug("поулчен запрос GET /films/id");
-        return filmStorage.getFilm(filmId);
+        return filmService.getFilmStorage().getFilm(filmId);
 
     }
 
     @PostMapping()
     Film create(@RequestBody @Valid Film film) {
         log.info("поулчен запрос POST /films");
-        filmStorage.save(film);
+        filmService.getFilmStorage().save(film);
         return film;
     }
 
     @PutMapping
     Film update(@RequestBody @Valid Film film) {
         log.debug("поулчен запрос PUT /films");
-        filmStorage.update(film);
+        filmService.getFilmStorage().update(film);
         return film;
     }
 
     @PutMapping("/{id}/like/{userId}")
     public Film addLike(@PathVariable Long id, @PathVariable Long userId) {
         log.debug("поулчен запрос PUT /films/{id}/like/{userId}");
-        filmService.addLike(filmStorage.getFilm(id), userId);
-        return filmStorage.getFilm(id);
+        filmService.addLike(filmService.getFilmStorage().getFilm(id), userId);
+        return filmService.getFilmStorage().getFilm(id);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
     public Film removeLike(@PathVariable Long id, @PathVariable Long userId) {
         log.debug("поулчен запрос DELETE /films/{id}/like/{userId}");
-        filmService.removeLike(filmStorage.getFilm(id), userId);
-        return filmStorage.getFilm(id);
+        filmService.removeLike(filmService.getFilmStorage().getFilm(id), userId);
+        return filmService.getFilmStorage().getFilm(id);
     }
 
     @GetMapping("/popular")
     public List<Film> getPopularFilms(@RequestParam(required = false) Integer count) {
         log.debug("поулчен запрос get /films/{id}/like/{userId}");
-        return filmService.getMostLikedFilms(filmStorage, count);
+        return filmService.getMostLikedFilms(filmService.getFilmStorage(), count);
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handle(final FilmNotFoundException e) {
-        return new ErrorResponse("Ошибка данных", e.getMessage());
-    }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handle(final UserNotFoundException e) {
-        return new ErrorResponse("Ошибка данных", e.getMessage());
-    }
 }
