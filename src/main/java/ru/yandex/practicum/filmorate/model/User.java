@@ -5,6 +5,9 @@ import lombok.Data;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 
 @Data
@@ -22,16 +25,19 @@ public class User {
     @Past
     LocalDate birthday;
 
-    public User(Long id, String email, String login, String name, LocalDate birthday) {
+    Set<Long> friends;
+
+    public User(Long id, String email, String login, String name, LocalDate birthday, Set<Long> friends) {
         this.id = id;
         this.email = email;
         this.login = login;
-        if (name == null) {
+        if ((name == null) || (name.isBlank())) {
             this.name = login;
         } else {
             this.name = name;
         }
 
         this.birthday = birthday;
+        this.friends = Objects.requireNonNullElseGet(friends, HashSet::new);
     }
 }
