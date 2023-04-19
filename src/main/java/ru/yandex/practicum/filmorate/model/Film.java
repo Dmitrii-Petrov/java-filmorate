@@ -25,5 +25,8 @@ public class Film {
     @Min(0)
     private int duration;
 
+    private Set<String> genres;
+    private FilmRating rating;
+
 
 }
