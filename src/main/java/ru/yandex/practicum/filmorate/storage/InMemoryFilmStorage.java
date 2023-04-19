@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 @Data
-@Component
+@Component("inMemoryFilmStorage")
 public class InMemoryFilmStorage implements FilmStorage {
     HashMap<Long, Film> filmRepository = new HashMap<>();
     long generatorId = 0;

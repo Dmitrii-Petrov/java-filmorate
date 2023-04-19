@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 @Data
-@Component
+@Component("inMemoryUserStorage")
 public class InMemoryUserStorage implements UserStorage {
     HashMap<Long, User> userRepository = new HashMap<>();
     long generatorId = 0;
