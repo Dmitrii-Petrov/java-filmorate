@@ -34,12 +34,13 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         if (!userRepository.containsKey(id)) {
             throw new UserNotFoundException();
         }
         userRepository.remove(id);
 
+        return false;
     }
 
     @Override

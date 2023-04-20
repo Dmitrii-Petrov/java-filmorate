@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Data
 @Component("inMemoryFilmStorage")
@@ -33,11 +34,12 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         if (!filmRepository.containsKey(id)) {
             throw new FilmNotFoundException();
         }
         filmRepository.remove(id);
+        return false;
     }
 
 
@@ -50,7 +52,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public ArrayList<Film> getFilms() {
+    public List<Film> getFilms() {
         return new ArrayList<>(filmRepository.values());
     }
 

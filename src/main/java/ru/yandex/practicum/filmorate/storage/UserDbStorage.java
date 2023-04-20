@@ -13,7 +13,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +56,9 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
+        String sqlQuery = "delete from USERS where ID = ?";
+        return jdbcTemplate.update(sqlQuery, id) > 0;
 
     }
 

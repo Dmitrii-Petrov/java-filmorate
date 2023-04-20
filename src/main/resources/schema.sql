@@ -56,3 +56,13 @@ create table if not exists FRIENDS
     primary key (USER_ID, FRIEND_ID)
 );
 
+delete
+from FILM_LIKES;
+delete
+from FILM_GENRE;
+delete
+from FRIENDS;
+delete
+from FILMS;
+delete
+from USERS;
