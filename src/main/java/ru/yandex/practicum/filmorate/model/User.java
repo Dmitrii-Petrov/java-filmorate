@@ -25,9 +25,20 @@ public class User {
     @Past
     LocalDate birthday;
 
-//    Set<Long> outcomingFriendRequest;
-//    Set<Long> incomingFriendRequest;
+    Set<Long> outcomingFriendRequest;
+    Set<Long> incomingFriendRequest;
     Set<Long> friends;
+
+    public User(Long id, String email, String login, String name, LocalDate birthday, Set<Long> outcomingFriendRequest, Set<Long> incomingFriendRequest, Set<Long> friends) {
+        this.id = id;
+        this.email = email;
+        this.login = login;
+        this.name = name;
+        this.birthday = birthday;
+        this.outcomingFriendRequest = outcomingFriendRequest;
+        this.incomingFriendRequest = incomingFriendRequest;
+        this.friends = friends;
+    }
 
     public User(Long id, String email, String login, String name, LocalDate birthday, Set<Long> friends) {
         this.id = id;

@@ -26,6 +26,7 @@ public class Film {
     private int duration;
 
     private Set<String> genres;
+    @NotNull
     private FilmRating rating;
 
 
