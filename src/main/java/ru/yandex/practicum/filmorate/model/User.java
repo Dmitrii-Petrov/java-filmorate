@@ -5,9 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 
 @Data
@@ -24,21 +22,7 @@ public class User {
     String name;
     @Past
     LocalDate birthday;
-
-    Set<Long> outcomingFriendRequest;
-    Set<Long> incomingFriendRequest;
     Set<Long> friends;
-
-    public User(Long id, String email, String login, String name, LocalDate birthday, Set<Long> outcomingFriendRequest, Set<Long> incomingFriendRequest, Set<Long> friends) {
-        this.id = id;
-        this.email = email;
-        this.login = login;
-        this.name = name;
-        this.birthday = birthday;
-        this.outcomingFriendRequest = outcomingFriendRequest;
-        this.incomingFriendRequest = incomingFriendRequest;
-        this.friends = friends;
-    }
 
     public User(Long id, String email, String login, String name, LocalDate birthday, Set<Long> friends) {
         this.id = id;
@@ -52,5 +36,14 @@ public class User {
 
         this.birthday = birthday;
         this.friends = Objects.requireNonNullElseGet(friends, HashSet::new);
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("EMAIL", email);
+        values.put("LOGIN", login);
+        values.put("NAME", name);
+        values.put("BIRTHDAY", birthday);
+        return values;
     }
 }

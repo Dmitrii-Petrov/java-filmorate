@@ -8,10 +8,11 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
-@Service
+@Service("userService")
 public class UserService {
 
     UserStorage userStorage;
@@ -26,7 +27,7 @@ public class UserService {
         return userStorage;
     }
 
-    public ArrayList<User> getUsers() {
+    public List<User> getUsers() {
         return getUserStorage().getUsers();
     }
 
@@ -34,11 +35,11 @@ public class UserService {
         return getUserStorage().getUser(userId);
     }
 
-    public ArrayList<User> getUsersFriends(Long userId) {
+    public List<User> getUsersFriends(Long userId) {
         return getUserStorage().getUserList(getUserStorage().getUser(userId).getFriends());
     }
 
-    public ArrayList<User> getUsersCommonFriends(Long userId, Long otherId) {
+    public List<User> getUsersCommonFriends(Long userId, Long otherId) {
         return getUserStorage().getUserList(commonFriends(getUserStorage().getUser(userId), getUserStorage().getUser(otherId)));
     }
 

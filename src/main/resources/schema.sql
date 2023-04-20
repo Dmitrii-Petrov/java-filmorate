@@ -1,57 +1,58 @@
-create table if not exists "films"
+create table if not exists FILMS
 (
-    "id"           BIGINT auto_increment
+    ID           BIGINT auto_increment
         primary key,
-    "name"         CHARACTER VARYING    not null,
-    "description"  CHARACTER LARGE OBJECT(200),
-    "release_date" TIMESTAMP            not null,
-    "duration"     INTEGER              not null,
-    "rating"       CHARACTER VARYING(6) not null
+    NAME         CHARACTER VARYING(20) not null,
+    DESCRIPTION  CHARACTER LARGE OBJECT(200),
+    RELEASE_DATE TIMESTAMP             not null,
+    DURATION     INTEGER               not null,
+    RATING       CHARACTER VARYING(6)  not null
 );
+ALTER TABLE FILMS ALTER COLUMN ID RESTART WITH 1;
 
-create table if not exists "genre"
+create table if not exists GENRE
 (
-    "id"   BIGINT auto_increment
+    ID   BIGINT auto_increment
         primary key,
-    "name" CHARACTER VARYING(20)
+    NAME CHARACTER VARYING(20)
 );
 
-create table if not exists "film_genre"
+create table if not exists FILM_GENRE
 (
-    "film_id"  BIGINT not null
-        references "films",
-    "genre_id" BIGINT not null
-        references "genre",
-    primary key ("film_id", "genre_id")
+    FILM_ID  BIGINT not null
+        references FILMS,
+    GENRE_ID BIGINT not null
+        references GENRE,
+    primary key (FILM_ID, GENRE_ID)
 );
 
-create table if not exists "users"
+create table if not exists USERS
 (
-    "id"       BIGINT auto_increment
+    ID       BIGINT auto_increment
         primary key,
-    "email"    CHARACTER VARYING(20) not null,
-    "login"    CHARACTER VARYING(20) not null,
-    "name"     CHARACTER VARYING(20) not null,
-    "birthday" TIMESTAMP             not null
+    EMAIL    CHARACTER VARYING(20) not null,
+    LOGIN    CHARACTER VARYING(20) not null,
+    NAME     CHARACTER VARYING(20) not null,
+    BIRTHDAY TIMESTAMP             not null
 );
+ALTER TABLE USERS ALTER COLUMN ID RESTART WITH 1;
 
-create table if not exists "film_likes"
+create table if not exists FILM_LIKES
 (
-    "film_id" BIGINT not null
-        references "films",
-    "user_id" BIGINT not null
-        references "users",
-    primary key ("film_id", "user_id")
+    FILM_ID BIGINT not null
+        references FILMS,
+    USER_ID BIGINT not null
+        references USERS,
+    primary key (FILM_ID, USER_ID)
 );
 
-create table if not exists "friends"
+create table if not exists FRIENDS
 (
-    "user_id"           BIGINT  not null
-        references "users",
-    "friend_id"         BIGINT  not null
-        references "users",
-    "confirmed_friends" BOOLEAN not null,
-    primary key ("user_id", "friend_id")
+    USER_ID   BIGINT  not null
+        references USERS,
+    FRIEND_ID BIGINT  not null
+        references USERS,
+    MUTUAL    BOOLEAN not null,
+    primary key (USER_ID, FRIEND_ID)
 );
-
 

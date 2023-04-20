@@ -2,29 +2,33 @@ package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserDbService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Slf4j
 @RequestMapping("/users")
 @Validated
 public class UserController {
+
     UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(@Qualifier("userDbService")UserService userService) {
         this.userService = userService;
     }
 
 
     @GetMapping
-    public ArrayList<User> getUsers() {
+    public List<User> getUsers() {
         log.debug("поулчен запрос GET /users");
         return userService.getUsers();
     }
@@ -37,13 +41,13 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/friends")
-    public ArrayList<User> getUsersFriends(@PathVariable Long userId) {
+    public List<User> getUsersFriends(@PathVariable Long userId) {
         log.debug("поулчен запрос GET /users/id/friends");
         return userService.getUsersFriends(userId);
     }
 
     @GetMapping("/{userId}/friends/common/{otherId}")
-    public ArrayList<User> getUsersCommonFriends(@PathVariable Long userId, @PathVariable Long otherId) {
+    public List<User> getUsersCommonFriends(@PathVariable Long userId, @PathVariable Long otherId) {
         log.debug("поулчен запрос GET /users/id/friends/common/otherId");
         return userService.getUsersCommonFriends(userId, otherId);
     }
