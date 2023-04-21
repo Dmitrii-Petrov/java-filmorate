@@ -82,6 +82,7 @@ public class UserDbService extends UserService {
         return getUsersById(userId1);
 
     }
+
     private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
         return getUsersById(resultSet.getLong("FRIEND_ID"));
 
