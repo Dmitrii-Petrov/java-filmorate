@@ -14,6 +14,9 @@ import java.util.*;
 public class Film {
 
 
+    Set<Long> likes;
+    List<Genre> genres;
+    Mpa mpa = new Mpa();
     private long id;
     @NotBlank
     private String name;
@@ -25,9 +28,6 @@ public class Film {
     @NotNull
     @Min(0)
     private int duration;
-    Set<Long> likes;
-    List<Genre> genres;
-    Mpa mpa = new Mpa();
 
 
     public Film(long id, String name, String description, LocalDate releaseDate, int duration, Set<Long> likes, List<Genre> genres, Mpa mpa) {

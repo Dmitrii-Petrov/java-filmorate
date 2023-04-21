@@ -20,7 +20,7 @@ public class UserController {
     UserService userService;
 
     @Autowired
-    public UserController(@Qualifier("userDbService")UserService userService) {
+    public UserController(@Qualifier("userDbService") UserService userService) {
         this.userService = userService;
     }
 

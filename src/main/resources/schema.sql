@@ -1,3 +1,19 @@
+create table if not exists GENRE
+(
+    ID   BIGINT auto_increment
+        primary key,
+    NAME CHARACTER VARYING(20)
+);
+
+create table if not exists MPA
+(
+    ID          INTEGER auto_increment,
+    RATING      CHARACTER VARYING(10) not null,
+    DESCRIPTION CHARACTER VARYING(100),
+    constraint MPA_PK
+        primary key (ID)
+);
+
 create table if not exists FILMS
 (
     ID           BIGINT auto_increment
@@ -6,15 +22,9 @@ create table if not exists FILMS
     DESCRIPTION  CHARACTER LARGE OBJECT(200),
     RELEASE_DATE TIMESTAMP             not null,
     DURATION     INTEGER               not null,
-    RATING       CHARACTER VARYING(6)  not null
-);
-ALTER TABLE FILMS ALTER COLUMN ID RESTART WITH 1;
-
-create table if not exists GENRE
-(
-    ID   BIGINT auto_increment
-        primary key,
-    NAME CHARACTER VARYING(20)
+    RATING       INTEGER,
+    constraint FILMS_MPA_ID_FK
+        foreign key (RATING) references MPA
 );
 
 create table if not exists FILM_GENRE
@@ -35,7 +45,6 @@ create table if not exists USERS
     NAME     CHARACTER VARYING(20) not null,
     BIRTHDAY TIMESTAMP             not null
 );
-ALTER TABLE USERS ALTER COLUMN ID RESTART WITH 1;
 
 create table if not exists FILM_LIKES
 (
@@ -48,13 +57,14 @@ create table if not exists FILM_LIKES
 
 create table if not exists FRIENDS
 (
-    USER_ID   BIGINT  not null
+    USER_ID   BIGINT not null
         references USERS,
-    FRIEND_ID BIGINT  not null
+    FRIEND_ID BIGINT not null
         references USERS,
-    MUTUAL    BOOLEAN not null,
     primary key (USER_ID, FRIEND_ID)
 );
+
+
 
 delete
 from FILM_LIKES;
@@ -66,3 +76,7 @@ delete
 from FILMS;
 delete
 from USERS;
+
+ALTER TABLE FILMS ALTER COLUMN ID RESTART WITH 1;
+
+ALTER TABLE USERS ALTER COLUMN ID RESTART WITH 1;

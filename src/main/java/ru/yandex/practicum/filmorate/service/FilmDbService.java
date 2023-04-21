@@ -23,16 +23,19 @@ import java.util.Objects;
 public class FilmDbService extends FilmService {
     private final JdbcTemplate jdbcTemplate;
 
-    public FilmDbService(@Qualifier("filmDbStorage") FilmStorage filmStorage, JdbcTemplate jdbcTemplate) {
+    GenreDbService genreDbService;
+
+    public FilmDbService(@Qualifier("filmDbStorage") FilmStorage filmStorage, JdbcTemplate jdbcTemplate, GenreDbService genreDbService) {
         super(filmStorage);
         this.jdbcTemplate = jdbcTemplate;
+        this.genreDbService = genreDbService;
     }
 
     @Override
     public List<Film> getFilms() {
         List<Film> list = super.getFilms();
         for (Film f : list) {
-            updateFilmsMpaGenreNames(f);
+            updateFilmsMpaGenre(f);
         }
         return list;
     }
@@ -40,21 +43,25 @@ public class FilmDbService extends FilmService {
     @Override
     public Film getFilmById(Long filmId) {
         Film film = super.getFilmById(filmId);
-        updateFilmsMpaGenreNames(film);
+        updateFilmsMpaGenre(film);
         return film;
     }
 
     @Override
     public Film create(Film film) {
         super.create(film);
-        updateFilmsMpaGenreNames(film);
+        genreDbService.updateFilmGenre(film);
+        updateFilmsMpaGenre(film);
+
         return film;
     }
 
     @Override
     public Film update(Film film) {
         super.update(film);
-        updateFilmsMpaGenreNames(film);
+        genreDbService.updateFilmGenre(film);
+        updateFilmsMpaGenre(film);
+
         return film;
     }
 
@@ -73,21 +80,19 @@ public class FilmDbService extends FilmService {
 
     @Override
     public Film removeLike(Long filmId, Long userId) {
-        if (filmId > 0) {
+        if ((filmId > 0) && (userId > 0)) {
             String sqlQuery = "delete from FILM_LIKES where ((FILM_ID = ?) and (USER_ID = ?))";
             jdbcTemplate.update(sqlQuery,
                     filmId,
                     userId);
+            return getFilmById(filmId);
         } else throw new UserNotFoundException();
-        return getFilmById(filmId);
     }
 
     @Override
-
-    //todo прописать join таблиц
     public List<Film> getMostLikedFilms(Integer size) {
         List<Film> list = new ArrayList<>();
-        String sqlQuery = "select FILM_ID from FILM_LIKES group by FILM_ID order by count(USER_ID) desc";
+        String sqlQuery = "select ID from FILMS left join FILM_LIKES FL on FILMS.ID = FL.FILM_ID group by ID order by count(USER_ID) desc";
         for (Long l : jdbcTemplate.query(sqlQuery, this::mapRowToLike)) {
             list.add(getFilmById(l));
         }
@@ -96,12 +101,16 @@ public class FilmDbService extends FilmService {
 
     private Long mapRowToLike(ResultSet resultSet, int i) throws SQLException {
 
-        return resultSet.getLong("FILM_ID");
+        return resultSet.getLong("ID");
     }
 
 
-    public void updateFilmsMpaGenreNames(Film film) {
+    public void updateFilmsMpaGenre(Film film) {
         updateMpaName(film.getMpa());
+        film.getGenres().clear();
+        for (Genre g : genreDbService.getGenreToFilmById(film.getId())) {
+            film.getGenres().add(g);
+        }
         for (Genre g : film.getGenres()) {
             updateGenreName(g);
         }

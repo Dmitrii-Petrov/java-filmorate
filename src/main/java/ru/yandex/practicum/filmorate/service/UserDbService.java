@@ -2,9 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeptions.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -12,20 +10,15 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Service("userDbService")
 public class UserDbService extends UserService {
 
-    UserStorage userStorage;
-
     private final JdbcTemplate jdbcTemplate;
+    UserStorage userStorage;
 
 
     @Autowired
@@ -89,8 +82,6 @@ public class UserDbService extends UserService {
         return getUsersById(userId1);
 
     }
-
-
     private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
         return getUsersById(resultSet.getLong("FRIEND_ID"));
 

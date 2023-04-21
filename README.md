@@ -1,2 +1,2 @@
 # java-filmorate
-![ER-диаграмма](/scheme.png)
+![ER-диаграмма](/new schema 2.jpg)
