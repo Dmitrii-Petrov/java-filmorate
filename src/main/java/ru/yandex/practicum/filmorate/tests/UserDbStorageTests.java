@@ -63,4 +63,4 @@ public class UserDbStorageTests {
             userStorage.getUser(user.getId());
         });
     }
-} 
+}
