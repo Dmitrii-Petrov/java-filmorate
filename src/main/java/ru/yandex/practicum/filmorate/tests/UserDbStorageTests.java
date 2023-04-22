@@ -22,7 +22,12 @@ public class UserDbStorageTests {
 
     @BeforeAll
     static void beforeAll() {
-        UserDbStorageTests.user = User.builder().email("test@email.com").login("test login").name("test name").birthday(LocalDate.of(2000, 1, 1)).build();
+        UserDbStorageTests.user = User.builder()
+                .email("test@email.com")
+                .login("test login")
+                .name("test name")
+                .birthday(LocalDate.of(2000, 1, 1))
+                .build();
     }
 
     @Test

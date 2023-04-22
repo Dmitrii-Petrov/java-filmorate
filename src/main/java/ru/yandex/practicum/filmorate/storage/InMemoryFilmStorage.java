@@ -56,5 +56,21 @@ public class InMemoryFilmStorage implements FilmStorage {
         return new ArrayList<>(filmRepository.values());
     }
 
+    @Override
+    public List<Film> getMostLikedFilms(Integer size) {
+        return null;
+
+    }
+
+    @Override
+    public Film removeLike(Long filmId, Long id) {
+        return null;
+    }
+
+    @Override
+    public Film addLike(Long filmId, Long id) {
+        return null;
+    }
+
 
 }

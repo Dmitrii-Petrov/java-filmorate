@@ -89,6 +89,55 @@ public class UserDbStorage implements UserStorage {
         return users;
     }
 
+    @Override
+    public List<User> getUsersFriends(Long userId) {
+
+        String sqlQuery = "select FRIEND_ID from FRIENDS where USER_ID = ?";
+
+        return jdbcTemplate.query(sqlQuery, this::mapRowToFriendId, userId);
+
+    }
+
+    @Override
+    public List<User> getUsersCommonFriends(Long userId, Long otherId) {
+        List<User> commonFriends = new ArrayList<>();
+        if (getUsersFriends(userId) != null) {
+            commonFriends.addAll(getUsersFriends(userId));
+        }
+
+        if (getUsersFriends(otherId) != null) {
+            commonFriends.retainAll(getUsersFriends(otherId));
+        }
+        return commonFriends;
+    }
+
+    @Override
+    public User addFriend(Long userId1, Long userId2) {
+        if (userId2 > 0) {
+            String sqlQuery = "insert into FRIENDS(USER_ID, FRIEND_ID) " +
+                    "values (?, ?)";
+
+            jdbcTemplate.update(sqlQuery,
+                    userId1,
+                    userId2);
+        } else throw new UserNotFoundException();
+        return getUser(userId1);
+    }
+
+
+    @Override
+    public User removeFriend(Long userId1, Long userId2) {
+        if (userId2 > 0) {
+            String sqlQuery = "delete from FRIENDS where ((USER_ID = ?) and (FRIEND_ID = ?))";
+            jdbcTemplate.update(sqlQuery,
+                    userId1,
+                    userId2);
+        } else throw new UserNotFoundException();
+
+        return getUser(userId1);
+
+    }
+
     private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return User.builder()
@@ -99,4 +148,9 @@ public class UserDbStorage implements UserStorage {
                 .birthday(LocalDate.parse(resultSet.getString("BIRTHDAY"), dateTimeFormatter))
                 .build();
     }
+
+    private User mapRowToFriendId(ResultSet resultSet, int rowNum) throws SQLException {
+        return getUser(resultSet.getLong("FRIEND_ID"));
+    }
+
 }

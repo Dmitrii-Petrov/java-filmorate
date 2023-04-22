@@ -1,8 +1,10 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.storage;
 
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exeptions.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exeptions.GenreNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -14,11 +16,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Service("genreDbService")
-public class GenreDbService {
+@Data
+@Repository("genreDbStorage")
+public class GenreDbStorage {
     private final JdbcTemplate jdbcTemplate;
 
-    public GenreDbService(JdbcTemplate jdbcTemplate) {
+    @Autowired
+    public GenreDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
