@@ -1,22 +1,24 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 
-@Service
+@Service("userService")
+@Data
 public class UserService {
 
     UserStorage userStorage;
 
+
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
@@ -24,7 +26,7 @@ public class UserService {
         return userStorage;
     }
 
-    public ArrayList<User> getUsers() {
+    public List<User> getUsers() {
         return getUserStorage().getUsers();
     }
 
@@ -32,12 +34,12 @@ public class UserService {
         return getUserStorage().getUser(userId);
     }
 
-    public ArrayList<User> getUsersFriends(Long userId) {
-        return getUserStorage().getUserList(getUserStorage().getUser(userId).getFriends());
+    public List<User> getUsersFriends(Long userId) {
+        return getUserStorage().getUsersFriends(userId);
     }
 
-    public ArrayList<User> getUsersCommonFriends(Long userId, Long otherId) {
-        return getUserStorage().getUserList(commonFriends(getUserStorage().getUser(userId), getUserStorage().getUser(otherId)));
+    public List<User> getUsersCommonFriends(Long userId, Long otherId) {
+        return getUserStorage().getUsersCommonFriends(userId, otherId);
     }
 
     public User create(User user) {
@@ -51,28 +53,12 @@ public class UserService {
     }
 
     public User addFriend(Long userId1, Long userId2) {
-        getUsersById(userId1).getFriends().add(getUsersById(userId2).getId());
-        getUsersById(userId2).getFriends().add(getUsersById(userId1).getId());
+        getUserStorage().addFriend(userId1, userId2);
         return getUsersById(userId1);
     }
 
     public User removeFriend(Long userId1, Long userId2) {
-        getUsersById(userId1).getFriends().remove(getUsersById(userId2).getId());
-        getUsersById(userId2).getFriends().remove(getUsersById(userId1).getId());
+        getUserStorage().removeFriend(userId1, userId2);
         return getUsersById(userId1);
     }
-
-    public Set<Long> commonFriends(User user1, User user2) {
-        Set<Long> commonFriends = new HashSet<>();
-        if (user1.getFriends() != null) {
-            commonFriends.addAll(user1.getFriends());
-        }
-
-        if (user2.getFriends() != null) {
-            commonFriends.retainAll(user2.getFriends());
-        }
-        return commonFriends;
-    }
-
-
 }

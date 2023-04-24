@@ -7,9 +7,10 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Data
-@Component
+@Component("inMemoryFilmStorage")
 public class InMemoryFilmStorage implements FilmStorage {
     HashMap<Long, Film> filmRepository = new HashMap<>();
     long generatorId = 0;
@@ -33,11 +34,12 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         if (!filmRepository.containsKey(id)) {
             throw new FilmNotFoundException();
         }
         filmRepository.remove(id);
+        return false;
     }
 
 
@@ -50,8 +52,24 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public ArrayList<Film> getFilms() {
+    public List<Film> getFilms() {
         return new ArrayList<>(filmRepository.values());
+    }
+
+    @Override
+    public List<Film> getMostLikedFilms(Integer size) {
+        return null;
+
+    }
+
+    @Override
+    public Film removeLike(Long filmId, Long id) {
+        return null;
+    }
+
+    @Override
+    public Film addLike(Long filmId, Long id) {
+        return null;
     }
 
 

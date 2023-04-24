@@ -7,10 +7,11 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 @Data
-@Component
+@Component("inMemoryUserStorage")
 public class InMemoryUserStorage implements UserStorage {
     HashMap<Long, User> userRepository = new HashMap<>();
     long generatorId = 0;
@@ -34,12 +35,13 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         if (!userRepository.containsKey(id)) {
             throw new UserNotFoundException();
         }
         userRepository.remove(id);
 
+        return false;
     }
 
     @Override
@@ -64,5 +66,24 @@ public class InMemoryUserStorage implements UserStorage {
         return userList;
     }
 
+    @Override
+    public List<User> getUsersFriends(Long userId) {
+        return null;
+    }
+
+    @Override
+    public List<User> getUsersCommonFriends(Long userId, Long otherId) {
+        return null;
+    }
+
+    @Override
+    public User addFriend(Long userId1, Long userId2) {
+        return null;
+    }
+
+    @Override
+    public User removeFriend(Long userId1, Long userId2) {
+        return null;
+    }
 
 }
